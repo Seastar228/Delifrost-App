@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delifrost Dashboard</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background: #f4f4f4; }
+        .card { background: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        form { margin-top: 15px; display: flex; gap: 10px; }
+        input, select, button { padding: 8px; }
+    </style>
+</head>
+<body>
+
+    <h1>Delifrost Live Dashboard</h1>
+
+    <div class="card">
+        <h2>Supermarkets & Targets</h2>
+        <table>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Monthly Target</th>
+            </tr>
+            {% for s in supermarkets %}
+            <tr>
+                <td>{{ s.customer_code }}</td>
+                <td>{{ s.name }}</td>
+                <td>{% if s.targets %}{{ s.targets[0].target_amount }}{% else %}N/A{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Log Daily Order</h2>
+        <form action="/add_order" method="POST">
+            <select name="supermarket_id" required>
+                <option value="">Select Supermarket</option>
+                {% for s in supermarkets %}
+                <option value="{{ s.id }}">{{ s.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="product_name" placeholder="Product Name" required>
+            <input type="number" name="quantity" placeholder="Qty" required>
+            <input type="number" step="0.01" name="unit_price" placeholder="Unit Price" required>
+            <button type="submit">Add Order</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Log Return</h2>
+        <form action="/add_return" method="POST">
+            <select name="supermarket_id" required>
+                <option value="">Select Supermarket</option>
+                {% for s in supermarkets %}
+                <option value="{{ s.id }}">{{ s.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="product_name" placeholder="Product Name" required>
+            <input type="number" name="quantity" placeholder="Qty" required>
+            <input type="text" name="reason" placeholder="Reason">
+            <button type="submit">Log Return</button>
+        </form>
+    </div>
+
+</body>
+</html>
+
